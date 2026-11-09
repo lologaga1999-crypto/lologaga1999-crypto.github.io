@@ -1,0 +1,3 @@
+User-agent: *
+Allow: /
+Sitemap: https://lologaga1999-crypto.github.io/sitemap.xml
