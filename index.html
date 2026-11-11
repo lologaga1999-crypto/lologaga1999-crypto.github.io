@@ -12,7 +12,7 @@ header h1{color:#facc15;margin:0}
 #date{font-size:14px;color:#94a3b8}
 .top{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:20px}
 .top input,.top select{flex:1;padding:14px;border-radius:12px;background:#1e293b;color:#fff;border:1px solid #333}
-.top button{padding:14px;background:#facc15;border:none;border-radius:12px;font-weight:bold}
+.top button{padding:14px;background:#facc15;border:none;border-radius:12px;font-weight:bold;cursor:pointer}
 #ads{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:20px}
 .card{background:#1e293b;border-radius:20px;overflow:hidden}
 .card img{width:100%;height:200px;object-fit:cover}
@@ -22,9 +22,12 @@ header h1{color:#facc15;margin:0}
 .card a{display:block;background:#25D366;color:#fff;text-align:center;padding:12px;border-radius:12px;text-decoration:none;font-weight:bold}
 .form{background:#1e293b;padding:20px;border-radius:20px;margin-top:30px}
 .form input,.form select,.form textarea{width:100%;padding:14px;margin-bottom:12px;border-radius:12px;background:#00000033;color:#fff;border:1px solid #333;box-sizing:border-box}
-.form button{width:100%;padding:14px;background:#facc15;border:none;border-radius:12px;font-weight:bold}
+.form button{width:100%;padding:14px;background:#facc15;border:none;border-radius:12px;font-weight:bold;cursor:pointer}
 .admin{background:#1e293b;border:2px solid #facc15;padding:20px;border-radius:20px;margin-top:20px}
 #adminPanel{display:none}
+.admin-item{background:#00000033;padding:10px;border-radius:10px;margin-bottom:10px;display:flex;justify-content:space-between;align-items:center}
+.admin-btn-approve{background:#22c55e;color:#fff;border:none;padding:6px 12px;border-radius:6px;cursor:pointer}
+.admin-btn-delete{background:#ef4444;color:#fff;border:none;padding:6px 12px;border-radius:6px;cursor:pointer}
 </style>
 </head>
 <body>
@@ -47,7 +50,7 @@ header h1{color:#facc15;margin:0}
 <textarea id="form-desc" rows="3" placeholder="وصف السلعة..."></textarea>
 <button onclick="addAd()">إرسال للمراجعة 📤</button>
 </div>
-<div class="admin" id="adminPanel"><h3>لوحة التحكم</h3><h4>⏳ انتظار:</h4><div id="pendingList"></div><h4>✅ نشطة:</h4><div id="approvedList"></div><button onclick="hideAdmin()" style="width:100%;padding:12px;margin-top:15px">إغلاق</button></div>
+<div class="admin" id="adminPanel"><h3>لوحة التحكم</h3><h4>⏳ انتظار:</h4><div id="pendingList"></div><h4>✅ نشطة:</h4><div id="approvedList"></div><button onclick="hideAdmin()" style="width:100%;padding:12px;margin-top:15px;background:#ef4444;color:#fff;border:none;border-radius:12px;cursor:pointer">إغلاق</button></div>
 <script>
 function updateClock(){
   let now=new Date();
@@ -55,33 +58,34 @@ function updateClock(){
   document.getElementById('date').textContent=now.toLocaleDateString('ar-DZ',{weekday:'long',day:'numeric',month:'long',year:'numeric'});
 }
 setInterval(updateClock,1000); updateClock();
-const API="https://getpantry.cloud/apiv1/pantry/mador-market-annaba-2026/basket/ads";
+const API="https://getpantry.cloud";
 let ads=[]; let tempImg="";
 async function loadAds(){
   try{
     let r=await fetch(API); let j=await r.json();
     if(j && j.ads && Array.isArray(j.ads) && j.ads.length>=4){ads=j.ads;}
     else{ads=[
-      {id:1,title:"iPhone 13 Pro",price:125000,cat:"هواتف",location:"عنابة - وسط",phone:"551234567",desc:"نظيف بزاف، معاه كلش",img:"https://via.placeholder.com/400x300?text=iPhone",status:"approved",time:new Date().toLocaleString('ar-DZ')},
-      {id:2,title:"سيارة Clio 4",price:1850000,cat:"سيارات",location:"البوني",phone:"551234567",desc:"ماشية 120 ألف، نظيفة",img:"https://via.placeholder.com/400x300?text=Clio",status:"approved",time:new Date().toLocaleString('ar-DZ')},
-      {id:3,title:"Samsung Galaxy S23",price:95000,cat:"هواتف",location:"عنابة - الحجار",phone:"551234567",desc:"جديد، معاه شارجور و بوشات",img:"https://via.placeholder.com/400x300?text=Samsung",status:"approved",time:new Date().toLocaleString('ar-DZ')},
-      {id:4,title:"ارض",price:17000,cat:"عقارات",location:"عنابة",phone:"661157039",desc:"",img:"",status:"approved",time:new Date().toLocaleString('ar-DZ')}
+      {id:1,title:"iPhone 13 Pro",price:125000,cat:"هواتف",location:"عنابة - وسط",phone:"551234567",desc:"نظيف بزاف، معاه كلش",img:"https://unsplash.com",status:"approved",time:new Date().toLocaleString('ar-DZ')},
+      {id:2,title:"سيارة Clio 4",price:1850000,cat:"سيارات",location:"البوني",phone:"551234567",desc:"ماشية 120 ألف، نظيفة",img:"https://unsplash.com",status:"approved",time:new Date().toLocaleString('ar-DZ')},
+      {id:3,title:"Samsung Galaxy S23",price:95000,cat:"هواتف",location:"عنابة - الحجار",phone:"551234567",desc:"جديد، معاه شارجور و بوشات",img:"https://unsplash.com",status:"approved",time:new Date().toLocaleString('ar-DZ')},
+      {id:4,title:"ارض",price:17000,cat:"عقارات",location:"عنابة",phone:"661157039",desc:"",img:"https://unsplash.com",status:"approved",time:new Date().toLocaleString('ar-DZ')}
     ]; await saveAds();}
     document.getElementById('status').textContent="✅ متصل - "+ads.filter(a=>a.status==="approved").length+" إعلان نشط";
   }catch(e){ ads=JSON.parse(localStorage.getItem('mador_ads')||'[]'); if(ads.length===0){ads=[
-      {id:1,title:"iPhone 13 Pro",price:125000,cat:"هواتف",location:"عنابة - وسط",phone:"551234567",desc:"نظيف بزاف، معاه كلش",img:"https://via.placeholder.com/400x300?text=iPhone",status:"approved",time:new Date().toLocaleString('ar-DZ')},
-      {id:2,title:"سيارة Clio 4",price:1850000,cat:"سيارات",location:"البوني",phone:"551234567",desc:"ماشية 120 ألف، نظيفة",img:"https://via.placeholder.com/400x300?text=Clio",status:"approved",time:new Date().toLocaleString('ar-DZ')},
-      {id:3,title:"Samsung Galaxy S23",price:95000,cat:"هواتف",location:"عنابة - الحجار",phone:"551234567",desc:"جديد، معاه شارجور و بوشات",img:"https://via.placeholder.com/400x300?text=Samsung",status:"approved",time:new Date().toLocaleString('ar-DZ')},
-      {id:4,title:"ارض",price:17000,cat:"عقارات",location:"عنابة",phone:"661157039",desc:"",img:"",status:"approved",time:new Date().toLocaleString('ar-DZ')}
+      {id:1,title:"iPhone 13 Pro",price:125000,cat:"هواتف",location:"عنابة - وسط",phone:"551234567",desc:"نظيف بزاف، معاه كلش",img:"https://unsplash.com",status:"approved",time:new Date().toLocaleString('ar-DZ')},
+      {id:2,title:"سيارة Clio 4",price:1850000,cat:"سيارات",location:"البوني",phone:"551234567",desc:"ماشية 120 ألف، نظيفة",img:"https://unsplash.com",status:"approved",time:new Date().toLocaleString('ar-DZ')},
+      {id:3,title:"Samsung Galaxy S23",price:95000,cat:"هواتف",location:"عنابة - الحجار",phone:"551234567",desc:"جديد، معاه شارجور و بوشات",img:"https://unsplash.com",status:"approved",time:new Date().toLocaleString('ar-DZ')},
+      {id:4,title:"ارض",price:17000,cat:"عقارات",location:"عنابة",phone:"661157039",desc:"",img:"https://unsplash.com",status:"approved",time:new Date().toLocaleString('ar-DZ')}
     ];} document.getElementById('status').textContent="⚠️ وضع بدون انترنت"; }
   renderMarket();
+  renderAdmin();
 }
 async function saveAds(){
   localStorage.setItem('mador_ads',JSON.stringify(ads));
   try{ await fetch(API,{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({ads:ads})}); }catch(e){}
 }
 function previewImage(e){
-  let file=e.target.files[0]; if(!file) return;
+  let file=e.target.files; if(!file) return;
   let r=new FileReader();
   r.onload=function(){ let img=new Image(); img.onload=function(){ let c=document.createElement('canvas'); let w=800; let h=img.height*800/img.width; c.width=w; c.height=h; c.getContext('2d').drawImage(img,0,0,w,h); tempImg=c.toDataURL('image/jpeg',0.7); }; img.src=r.result; }; r.readAsDataURL(file);
 }
@@ -94,26 +98,87 @@ function renderMarket(){
   else if(sort==="high")list.sort((a,b)=>b.price-a.price);
   else if(sort==="old")list.sort((a,b)=>a.id-b.id);
   else list.sort((a,b)=>b.id-a.id);
-  document.getElementById('ads').innerHTML=list.map(a=>`<div class="card"><img src="${a.img||'https://via.placeholder.com/400x300?text=No+Image'}"><div class="card-body"><div class="time-top">🕐 ${a.time||''}</div><h3>${a.title}</h3><p>📍 ${a.location} | ${a.cat}</p><p>${a.desc||''}</p><div class="price">${a.price} دج</div><a href="https://wa.me/213${a.phone}" target="_blank">واتساب 💬</a></div></div>`).join('')||"<p>لا توجد إعلانات</p>";
+  
+  let html="";
+  list.forEach(a=>{
+    let fallbackImg = a.img || "https://unsplash.com";
+    html+=`
+      <div class="card">
+        <img src="${fallbackImg}" alt="${a.title}">
+        <div class="card-body">
+          <span class="time-top">${a.location}</span>
+          <h3>${a.title}</h3>
+          <p style="color:#94a3b8; font-size:14px;">${a.desc || 'لا يوجد وصف'}</p>
+          <div class="price">${Number(a.price).toLocaleString()} دج</div>
+          <a href="https://wa.me{a.phone}" target="_blank">💬 تواصل عبر واتساب</a>
+        </div>
+      </div>
+    `;
+  });
+  document.getElementById('ads').innerHTML=html;
 }
-async function addAd(){
-  let t=document.getElementById('form-title').value.trim();
+function addAd(){
+  let t=document.getElementById('form-title').value;
   let p=document.getElementById('form-price').value;
-  let ph=document.getElementById('form-phone').value.trim();
-  if(!t||!p||!ph){alert("عمر الاسم و السعر و الواتساب");return;}
-  ads.push({id:Date.now(),title:t,price:Number(p),cat:document.getElementById('form-cat').value,location:document.getElementById('form-location').value||"عنابة",phone:ph,desc:document.getElementById('form-desc').value,img:tempImg,status:"pending",time:new Date().toLocaleString('ar-DZ')});
-  await saveAds(); alert("تم الإرسال للمراجعة ✅"); location.reload();
+  let cat=document.getElementById('form-cat').value;
+  let loc=document.getElementById('form-location').value;
+  let ph=document.getElementById('form-phone').value;
+  let desc=document.getElementById('form-desc').value;
+  if(!t||!p||!ph||!loc){alert("تعيش اعمر كل الخانات الأساسية!"); return;}
+  let newAd={
+    id:Date.now(),title:t,price:Number(p),cat:cat,location:loc,phone:ph,desc:desc,
+    img:tempImg,status:"pending",time:new Date().toLocaleString('ar-DZ')
+  };
+  ads.push(newAd); saveAds(); renderAdmin();
+  alert("تم إرسال إعلانك بنجاح! ينتظر مراجعة الإدارة.");
+  document.getElementById('form-title').value="";
+  document.getElementById('form-price').value="";
+  document.getElementById('form-location').value="";
+  document.getElementById('form-phone').value="";
+  document.getElementById('form-desc').value="";
+  document.getElementById('form-file').value="";
+  tempImg="";
 }
-function showAdmin(){
-  let pass=prompt("كلمة السر:"); if(pass!=="1234"){alert("غلط");return;}
-  document.getElementById('adminPanel').style.display="block";
-  document.getElementById('pendingList').innerHTML=ads.filter(a=>a.status==="pending").map(a=>`<div style="background:#00000055;padding:10px;border-radius:10px;margin:5px">${a.title} - ${a.price} دج <button onclick="approveAd(${a.id})" style="background:#22c55e;color:#fff;border:none;padding:6px 10px;border-radius:8px">قبول</button> <button onclick="deleteAd(${a.id})" style="background:#ef4444;color:#fff;border:none;padding:6px 10px;border-radius:8px">حذف</button></div>`).join('')||"لا يوجد";
-  document.getElementById('approvedList').innerHTML=ads.filter(a=>a.status==="approved").map(a=>`<div style="background:#00000055;padding:10px;border-radius:10px;margin:5px">${a.title} <button onclick="deleteAd(${a.id})" style="background:#ef4444;color:#fff;border:none;padding:6px 10px;border-radius:8px">حذف</button></div>`).join('');
+function renderAdmin(){
+  let pList=""; let aList="";
+  ads.forEach(a=>{
+    if(a.status==="pending"){
+      pList+=`<div class="admin-item"><span>${a.title} (${a.price} دج)</span><div><button class="admin-btn-approve" onclick="approveAd(${a.id})">✅ تفعيل</button> <button class="admin-btn-delete" onclick="deleteAd(${a.id})">❌ حذف</button></div></div>`;
+        <span>${a.title} (${a.price} دج)</span><div><button class="admin-btn-approve" onclick="approveAd(${a.id})">✅ تفعيل</button> <button class="admin-btn-delete" onclick="deleteAd(${a.id})">❌ حذف</button></div></div>`;
+    }else{
+      aList+=`<div class="admin-item"><span>${a.title}</span><button class="admin-btn-delete" onclick="deleteAd(${a.id})">❌ حذف</button></div>`;
+    }
+  });
+  document.getElementById('pendingList').innerHTML = pList || "<p>لا توجد إعلانات في الانتظار</p>";
+  document.getElementById('approvedList').innerHTML = aList || "<p>لا توجد إعلانات نشطة</p>";
 }
-function hideAdmin(){document.getElementById('adminPanel').style.display="none";}
-async function approveAd(id){let a=ads.find(x=>x.id===id);a.status="approved";await saveAds();showAdmin();renderMarket();}
-async function deleteAd(id){ads=ads.filter(x=>x.id!==id);await saveAds();showAdmin();renderMarket();}
-loadAds();
+
+function approveAd(id) {
+  let idx = ads.findIndex(a => a.id === id); 
+  if (idx > -1) {
+    ads[idx].status = "approved"; 
+    saveAds(); 
+    renderMarket(); 
+    renderAdmin();
+  }
+}
+
+function deleteAd(id) {
+  if (confirm("هل أنت متأكد من حذف هذا الإعلان؟")) {
+    ads = ads.filter(a => a.id !== id); 
+    saveAds(); 
+    renderMarket(); 
+    renderAdmin();
+}
+}
+function showAdmin() {
+document.getElementById('adminPanel').style.display = 'block';
+}
+function hideAdmin() {
+document.getElementById('adminPanel').style.display = 'none';
+}
+window.onload = loadAds;
 </script>
 </body>
 </html>
+
