@@ -2,183 +2,89 @@
 <html lang="ar" dir="rtl">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>سوق مادور - عنابة</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>سوق مادور | سوق الشرق</title>
 <style>
-body{margin:0;background:#0f172a;color:#fff;padding:15px;font-family:system-ui}
-header{text-align:center;background:#1e293b;padding:25px;border-radius:20px;margin-bottom:20px}
-header h1{color:#facc15;margin:0}
-#clock{font-size:32px;font-weight:900;color:#22c55e;margin-top:10px;letter-spacing:1px}
-#date{font-size:14px;color:#94a3b8}
-.top{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:20px}
-.top input,.top select{flex:1;padding:14px;border-radius:12px;background:#1e293b;color:#fff;border:1px solid #333}
-.top button{padding:14px;background:#facc15;border:none;border-radius:12px;font-weight:bold;cursor:pointer}
-#ads{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:20px}
-.card{background:#1e293b;border-radius:20px;overflow:hidden}
-.card img{width:100%;height:200px;object-fit:cover}
-.card-body{padding:16px}
-.time-top{background:#facc15;color:#000;font-size:13px;font-weight:bold;padding:6px 10px;border-radius:8px;display:inline-block;margin-bottom:8px}
-.price{color:#22c55e;font-weight:800;font-size:22px;margin:10px 0}
-.card a{display:block;background:#25D366;color:#fff;text-align:center;padding:12px;border-radius:12px;text-decoration:none;font-weight:bold}
-.form{background:#1e293b;padding:20px;border-radius:20px;margin-top:30px}
-.form input,.form select,.form textarea{width:100%;padding:14px;margin-bottom:12px;border-radius:12px;background:#00000033;color:#fff;border:1px solid #333;box-sizing:border-box}
-.form button{width:100%;padding:14px;background:#facc15;border:none;border-radius:12px;font-weight:bold;cursor:pointer}
-.admin{background:#1e293b;border:2px solid #facc15;padding:20px;border-radius:20px;margin-top:20px}
-#adminPanel{display:none}
-.admin-item{background:#00000033;padding:10px;border-radius:10px;margin-bottom:10px;display:flex;justify-content:space-between;align-items:center}
-.admin-btn-approve{background:#22c55e;color:#fff;border:none;padding:6px 12px;border-radius:6px;cursor:pointer}
-.admin-btn-delete{background:#ef4444;color:#fff;border:none;padding:6px 12px;border-radius:6px;cursor:pointer}
+*{box-sizing:border-box} body{margin:0;font-family:Arial,sans-serif;background:#0f172a;color:#fff}
+header{background:#0f172a;padding:16px;text-align:center;border-bottom:1px solid #222}
+header h1{margin:0;color:#facc15;font-size:26px}
+header p{color:#ddd;margin:6px 0 0}
+#adminBtn{display:none;background:#facc15;color:#000;border:none;padding:10px 18px;border-radius:20px;font-weight:bold;position:fixed;bottom:15px;left:15px;z-index:99;cursor:pointer}
+.search{padding:12px} .search input{width:100%;padding:13px;border-radius:12px;border:1px solid #333;background:#1e293b;color:#fff;font-size:16px}
+.filters{display:flex;gap:10px;padding:0 12px} .filters select{flex:1;padding:11px;border-radius:12px;background:#1e293b;color:#fff;border:1px solid #333}
+.products{display:grid;grid-template-columns:1fr 1fr;gap:12px;padding:12px}
+.card{background:#1e293b;border-radius:16px;overflow:hidden;display:flex;flex-direction:column}
+.card img{width:100%;height:150px;object-fit:cover} .card-body{padding:10px;display:flex;flex-direction:column;flex-grow:1;justify-content:space-between}
+.price{color:#facc15;font-weight:bold;margin:4px 0} .card button{width:100%;padding:10px;border:none;background:#facc15;border-radius:10px;margin-top:8px;font-weight:bold;color:#000;cursor:pointer}
+.delBtn{background:#ef4444 !important;color:#fff !important}
+.addBtn{display:block;margin:10px 12px;padding:14px;background:#1e293b;border-radius:14px;text-align:center;font-weight:bold;border:1px dashed #facc15;color:#facc15}
+#adminPanel{display:none;background:#fff;color:#000;margin:12px;padding:14px;border-radius:14px}
+#adminPanel input,#adminPanel select{width:100%;padding:11px;margin:5px 0;border:1px solid #ddd;border-radius:8px}
+#adminPanel button{background:#111;color:#fff;padding:11px;border:none;border-radius:8px;width:100%;font-weight:bold;cursor:pointer;margin-top:5px}
 </style>
 </head>
 <body>
-<header><h1>🛒 سوق مادور - سوق الشرق</h1><div id="clock">--:--:--</div><div id="date"></div><p>بيع و اشري في عنابة و الشرق</p><p id="status" style="font-size:13px;color:#facc15">⏳ جاري التحميل...</p></header>
-<div class="top">
-<input id="search" placeholder="🔍 حوس..." oninput="renderMarket()">
-<select id="filterCat" onchange="renderMarket()"><option value="">كل التصنيفات</option><option value="سيارات">سيارات</option><option value="هواتف">هواتف</option><option value="عقارات">عقارات</option><option value="ملابس">ملابس</option><option value="اخرى">اخرى</option></select>
-<select id="sortPrice" onchange="renderMarket()"><option value="new">🕐 الجديد أولا</option><option value="old">القديم أولا</option><option value="low">الأقل سعرا</option><option value="high">الأعلى سعرا</option></select>
-<button onclick="showAdmin()">⚙️ لوحة التحكم</button>
+<header><h1>🛒 سوق مادور - سوق الشرق</h1><p>بيع و اشري في عنابة و الشرق</p></header>
+<div class="search"><input id="search" placeholder="🔍 حوس على سلعة..." oninput="filterAndRender()"></div>
+<div class="filters">
+<select id="categoryFilter" onchange="filterAndRender()"><option value="الكل">كل التصنيفات</option><option value="ملابس">ملابس</option><option value="هواتف">هواتف</option><option value="ساعات">ساعات</option><option value="سيارات">سيارات</option></select>
+<select id="sortFilter" onchange="filterAndRender()"><option value="الجديد">🕒 الجديد أولاً</option><option value="رخيص">📉 الأقل سعراً</option><option value="غالي">📈 الأعلى سعراً</option></select>
 </div>
-<div id="ads"></div>
-<div class="form">
-<h2>➕ زيد إعلان جديد</h2>
-<input id="form-title" placeholder="اسم السلعة">
-<input type="number" id="form-price" placeholder="السعر بالدينار">
-<select id="form-cat"><option>سيارات</option><option>هواتف</option><option>عقارات</option><option>ملابس</option><option>اخرى</option></select>
-<input id="form-location" placeholder="المكان - عنابة، البوني">
-<input type="number" id="form-phone" placeholder="واتساب بدون صفر - 551234567">
-<input type="file" id="form-file" accept="image/*" onchange="previewImage(event)">
-<textarea id="form-desc" rows="3" placeholder="وصف السلعة..."></textarea>
-<button onclick="addAd()">إرسال للمراجعة 📤</button>
+<button id="adminBtn" onclick="toggleAdmin()">⚙️ لوحة التحكم</button>
+<div id="adminPanel">
+<h3>⚙️ لوحة التحكم - خاصة بك</h3>
+<input id="pName" placeholder="اسم السلعة">
+<input id="pPrice" type="number" placeholder="السعر (دج)">
+<select id="pCategory"><option value="ملابس">ملابس</option><option value="هواتف">هواتف</option><option value="ساعات">ساعات</option><option value="سيارات">سيارات</option></select>
+<input id="pImg" placeholder="رابط الصورة (اختياري)">
+<button onclick="addProduct()">+ زيد سلعة</button>
+<button onclick="logout()" style="background:#ef4444;color:#fff">خروج من الحساب</button>
 </div>
-<div class="admin" id="adminPanel"><h3>لوحة التحكم</h3><h4>⏳ انتظار:</h4><div id="pendingList"></div><h4>✅ نشطة:</h4><div id="approvedList"></div><button onclick="hideAdmin()" style="width:100%;padding:12px;margin-top:15px;background:#ef4444;color:#fff;border:none;border-radius:12px;cursor:pointer">إغلاق</button></div>
+<div class="products" id="list"></div>
+<div class="addBtn">➕ زيد إعلان جديد - تواصل مع صاحب الموقع</div>
 <script>
-function updateClock(){
-  let now=new Date();
-  document.getElementById('clock').textContent="🕐 "+now.toLocaleTimeString('ar-DZ');
-  document.getElementById('date').textContent=now.toLocaleDateString('ar-DZ',{weekday:'long',day:'numeric',month:'long',year:'numeric'});
+if(window.location.search.includes('admin=madour')){
+  let password = prompt('أدخل كلمة السر:');
+  if(password === 'madour123'){ localStorage.setItem('isAdmin','1'); alert('مرحبا بيك يا أدمن! ✅'); window.location.href = window.location.origin + window.location.pathname; }
+  else { alert('كلمة السر خاطئة! ❌'); }
 }
-setInterval(updateClock,1000); updateClock();
-const API="https://getpantry.cloud";
-let ads=[]; let tempImg="";
-async function loadAds(){
-  try{
-    let r=await fetch(API); let j=await r.json();
-    if(j && j.ads && Array.isArray(j.ads) && j.ads.length>=4){ads=j.ads;}
-    else{ads=[
-      {id:1,title:"iPhone 13 Pro",price:125000,cat:"هواتف",location:"عنابة - وسط",phone:"551234567",desc:"نظيف بزاف، معاه كلش",img:"https://unsplash.com",status:"approved",time:new Date().toLocaleString('ar-DZ')},
-      {id:2,title:"سيارة Clio 4",price:1850000,cat:"سيارات",location:"البوني",phone:"551234567",desc:"ماشية 120 ألف، نظيفة",img:"https://unsplash.com",status:"approved",time:new Date().toLocaleString('ar-DZ')},
-      {id:3,title:"Samsung Galaxy S23",price:95000,cat:"هواتف",location:"عنابة - الحجار",phone:"551234567",desc:"جديد، معاه شارجور و بوشات",img:"https://unsplash.com",status:"approved",time:new Date().toLocaleString('ar-DZ')},
-      {id:4,title:"ارض",price:17000,cat:"عقارات",location:"عنابة",phone:"661157039",desc:"",img:"https://unsplash.com",status:"approved",time:new Date().toLocaleString('ar-DZ')}
-    ]; await saveAds();}
-    document.getElementById('status').textContent="✅ متصل - "+ads.filter(a=>a.status==="approved").length+" إعلان نشط";
-  }catch(e){ ads=JSON.parse(localStorage.getItem('mador_ads')||'[]'); if(ads.length===0){ads=[
-      {id:1,title:"iPhone 13 Pro",price:125000,cat:"هواتف",location:"عنابة - وسط",phone:"551234567",desc:"نظيف بزاف، معاه كلش",img:"https://unsplash.com",status:"approved",time:new Date().toLocaleString('ar-DZ')},
-      {id:2,title:"سيارة Clio 4",price:1850000,cat:"سيارات",location:"البوني",phone:"551234567",desc:"ماشية 120 ألف، نظيفة",img:"https://unsplash.com",status:"approved",time:new Date().toLocaleString('ar-DZ')},
-      {id:3,title:"Samsung Galaxy S23",price:95000,cat:"هواتف",location:"عنابة - الحجار",phone:"551234567",desc:"جديد، معاه شارجور و بوشات",img:"https://unsplash.com",status:"approved",time:new Date().toLocaleString('ar-DZ')},
-      {id:4,title:"ارض",price:17000,cat:"عقارات",location:"عنابة",phone:"661157039",desc:"",img:"https://unsplash.com",status:"approved",time:new Date().toLocaleString('ar-DZ')}
-    ];} document.getElementById('status').textContent="⚠️ وضع بدون انترنت"; }
-  renderMarket();
-  renderAdmin();
-}
-async function saveAds(){
-  localStorage.setItem('mador_ads',JSON.stringify(ads));
-  try{ await fetch(API,{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({ads:ads})}); }catch(e){}
-}
-function previewImage(e){
-  let file=e.target.files; if(!file) return;
-  let r=new FileReader();
-  r.onload=function(){ let img=new Image(); img.onload=function(){ let c=document.createElement('canvas'); let w=800; let h=img.height*800/img.width; c.width=w; c.height=h; c.getContext('2d').drawImage(img,0,0,w,h); tempImg=c.toDataURL('image/jpeg',0.7); }; img.src=r.result; }; r.readAsDataURL(file);
-}
-function renderMarket(){
+if(localStorage.getItem('isAdmin') === '1'){ document.getElementById('adminBtn').style.display = 'block'; }
+function toggleAdmin(){ let p=document.getElementById('adminPanel'); p.style.display = p.style.display==='block'?'none':'block'; }
+function logout(){ localStorage.removeItem('isAdmin'); alert('تم الخروج'); location.reload(); }
+let defaultProducts = [
+{id:1,name:"حذاء رياضي نايك",price:4500,category:"ملابس",img:"https://images.unsplash.com/photo-1542291026-7eec264c27ff?w=600"},
+{id:2,name:"هاتف آيفون ذكي",price:25000,category:"هواتف",img:"https://images.unsplash.com/photo-1511707171634-5f897ff02aa9?w=600"},
+{id:3,name:"ساعة يد عصرية",price:8000,category:"ساعات",img:"https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=600"},
+{id:4,name:"جاكيت جلد أسود",price:6500,category:"ملابس",img:"https://images.unsplash.com/photo-1551028719-00167b16eac5?w=600"}
+];
+let products = JSON.parse(localStorage.getItem('myProducts')) || defaultProducts;
+let isAdmin = localStorage.getItem('isAdmin')==='1';
+function filterAndRender(){
   let s=document.getElementById('search').value.toLowerCase();
-  let c=document.getElementById('filterCat').value;
-  let sort=document.getElementById('sortPrice').value;
-  let list=ads.filter(a=>a.status==="approved"&&a.title.toLowerCase().includes(s)&&(!c||a.cat===c));
-  if(sort==="low")list.sort((a,b)=>a.price-b.price);
-  else if(sort==="high")list.sort((a,b)=>b.price-a.price);
-  else if(sort==="old")list.sort((a,b)=>a.id-b.id);
-  else list.sort((a,b)=>b.id-a.id);
-  
-  let html="";
-  list.forEach(a=>{
-    let fallbackImg = a.img || "https://unsplash.com";
-    html+=`
-      <div class="card">
-        <img src="${fallbackImg}" alt="${a.title}">
-        <div class="card-body">
-          <span class="time-top">${a.location}</span>
-          <h3>${a.title}</h3>
-          <p style="color:#94a3b8; font-size:14px;">${a.desc || 'لا يوجد وصف'}</p>
-          <div class="price">${Number(a.price).toLocaleString()} دج</div>
-          <a href="https://wa.me{a.phone}" target="_blank">💬 تواصل عبر واتساب</a>
-        </div>
-      </div>
-    `;
-  });
-  document.getElementById('ads').innerHTML=html;
+  let c=document.getElementById('categoryFilter').value;
+  let sort=document.getElementById('sortFilter').value;
+  let f=products.filter(p=>p.name.toLowerCase().includes(s) && (c==="الكل"||p.category===c));
+  if(sort==="رخيص") f.sort((a,b)=>a.price-b.price);
+  else if(sort==="غالي") f.sort((a,b)=>b.price-a.price);
+  else f.sort((a,b)=>b.id-a.id);
+  let list=document.getElementById('list');
+  if(f.length===0){ list.innerHTML='<p style="grid-column:1/-1;text-align:center;color:#94a3b8;padding:20px">مكانش سلع تطابق البحث تاعك.</p>'; return; }
+  list.innerHTML=f.map(p=>`<div class="card"><img src="${p.img}"><div class="card-body"><b>${p.name}</b><div class="price">${p.price} دج</div><button onclick="alert('اتصل بالبائع: ${p.name}')">شوف التفاصيل</button>${isAdmin?`<button class="delBtn" onclick="deleteProduct(${p.id})">🗑️ حذف</button>`:''}</div></div>`).join('');
 }
-function addAd(){
-  let t=document.getElementById('form-title').value;
-  let p=document.getElementById('form-price').value;
-  let cat=document.getElementById('form-cat').value;
-  let loc=document.getElementById('form-location').value;
-  let ph=document.getElementById('form-phone').value;
-  let desc=document.getElementById('form-desc').value;
-  if(!t||!p||!ph||!loc){alert("تعيش اعمر كل الخانات الأساسية!"); return;}
-  let newAd={
-    id:Date.now(),title:t,price:Number(p),cat:cat,location:loc,phone:ph,desc:desc,
-    img:tempImg,status:"pending",time:new Date().toLocaleString('ar-DZ')
-  };
-  ads.push(newAd); saveAds(); renderAdmin();
-  alert("تم إرسال إعلانك بنجاح! ينتظر مراجعة الإدارة.");
-  document.getElementById('form-title').value="";
-  document.getElementById('form-price').value="";
-  document.getElementById('form-location').value="";
-  document.getElementById('form-phone').value="";
-  document.getElementById('form-desc').value="";
-  document.getElementById('form-file').value="";
-  tempImg="";
+function addProduct(){
+  let n=document.getElementById('pName').value;
+  let p=document.getElementById('pPrice').value;
+  let c=document.getElementById('pCategory').value;
+  let i=document.getElementById('pImg').value;
+  if(!n||!p) return alert('عمر الاسم والسعر!');
+  products.unshift({id:Date.now(),name:n,price:Number(p),category:c,img:i||'https://via.placeholder.com/500?text='+encodeURIComponent(n)});
+  localStorage.setItem('myProducts',JSON.stringify(products));
+  filterAndRender();
+  document.getElementById('pName').value='';document.getElementById('pPrice').value='';document.getElementById('pImg').value='';
+  alert('تزادت ✅');
 }
-function renderAdmin(){
-  let pList=""; let aList="";
-  ads.forEach(a=>{
-    if(a.status==="pending"){
-      pList+=`<div class="admin-item"><span>${a.title} (${a.price} دج)</span><div><button class="admin-btn-approve" onclick="approveAd(${a.id})">✅ تفعيل</button> <button class="admin-btn-delete" onclick="deleteAd(${a.id})">❌ حذف</button></div></div>`;
-        <span>${a.title} (${a.price} دج)</span><div><button class="admin-btn-approve" onclick="approveAd(${a.id})">✅ تفعيل</button> <button class="admin-btn-delete" onclick="deleteAd(${a.id})">❌ حذف</button></div></div>`;
-    }else{
-      aList+=`<div class="admin-item"><span>${a.title}</span><button class="admin-btn-delete" onclick="deleteAd(${a.id})">❌ حذف</button></div>`;
-    }
-  });
-  document.getElementById('pendingList').innerHTML = pList || "<p>لا توجد إعلانات في الانتظار</p>";
-  document.getElementById('approvedList').innerHTML = aList || "<p>لا توجد إعلانات نشطة</p>";
-}
-
-function approveAd(id) {
-  let idx = ads.findIndex(a => a.id === id); 
-  if (idx > -1) {
-    ads[idx].status = "approved"; 
-    saveAds(); 
-    renderMarket(); 
-    renderAdmin();
-  }
-}
-
-function deleteAd(id) {
-  if (confirm("هل أنت متأكد من حذف هذا الإعلان؟")) {
-    ads = ads.filter(a => a.id !== id); 
-    saveAds(); 
-    renderMarket(); 
-    renderAdmin();
-}
-}
-function showAdmin() {
-document.getElementById('adminPanel').style.display = 'block';
-}
-function hideAdmin() {
-document.getElementById('adminPanel').style.display = 'none';
-}
-window.onload = loadAds;
+function deleteProduct(id){ if(!confirm('تحذف هذي السلعة؟')) return; products=products.filter(p=>p.id!==id); localStorage.setItem('myProducts',JSON.stringify(products)); filterAndRender(); }
+filterAndRender();
 </script>
 </body>
 </html>
-
